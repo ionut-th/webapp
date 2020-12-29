@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block main %}
+    <form action="/changepass" method="post">
+        <div class="form-group">
+            <input autocomplete="off" autofocus class="form-control" name="currentPass" placeholder="Current Password" type="password">
+        </div>
+        <div class="form-group">
+            <input class="form-control" name="newPass" placeholder="New Password" type="password">
+        </div>
+        <div class="form-group">
+            <input class="form-control" name="confirmation" placeholder="Retype New Password" type="password">
+        </div>
+        <button class="btn btn-primary" type="submit">Change password</button>
+        <p ><h6 style="color:green">{{msg}}</h6></p>
+    </form>
+{% endblock %}
