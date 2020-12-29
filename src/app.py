@@ -15,6 +15,9 @@ from helpers import apology, login_required, usd
 template_dir = os.path.abspath('./templates') # ./templates  up the path into templates
 app = Flask(__name__, template_folder=template_dir) # also set template folder path
 
+app.config['FLASK_ENV']= "development"
+app.config['FLASK_DEBUG']= True
+app.config['FLASK_APP']="src/app.py"
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
