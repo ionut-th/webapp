@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" type="text/css" href="./static/css/bootstrap.min.css">
+    <script src="./static/js/bootstrap.bundle.min.js"></script>
+    <title>EHUB NETWORK</title>
+
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-md navbar-light bg-light">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggler"
+                aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarToggler">
+                <a class="navbar-brand">
+                    <form method="get" action="/">
+                        <button type="submit" class="btn btn-success">EHUB </button>
+                    </form>
+                </a>
+                <ul class="navbar-nav mr-auto">
+                    <form class="form-inline" action="/search" method="POST">
+                        <input class="form-control" style="width: 400px;" type="sumbit" placeholder="Search" aria-label="Search">
+                    </form>
+                </ul>
+
+
+                <ul class="navbar-nav ml-auto">
+                    {% if session.user_id %}
+                    <form method="get" action="/newpost">
+                        <button type="submit" class="btn btn-info">New Post</button>
+                    </form>
+                    <form method="get" action="/changepass">
+                        <button type="submit" class="btn btn-info">Change Password</button>
+                    </form>
+                    <form method="get" action="/logout">
+                        <button type="submit" class="btn btn-primary">Log Out</button>
+                    </form>
+                    {% else %}
+
+                    <form method="get" action="/register">
+                        <button type="submit" class="btn btn-info">Register</button>
+                    </form>
+                    <form method="get" action="/login">
+                        <button type="submit" class="btn btn-info">Log In</button>
+                    </form>
+                    {% endif %}
+
+                </ul>
+
+            </div>
+        </div>
+
+    </nav>
+
+    <main class="container p-5">
+
+        {% block main %}
+
+
+        {% endblock %}
+    </main>
+
+</body>
+
+</html>

@@ -8,20 +8,17 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import *
 from sqlalchemy import *
 from sqlbase import *
-
 from helpers import apology, login_required, usd
 
 # Configure application
-template_dir = os.path.abspath('./templates') # ./templates  up the path into templates
+template_dir = os.path.abspath('./flaskr/templates') # ./templates  up the path into templates
 app = Flask(__name__, template_folder=template_dir) # also set template folder path
+app.config.from_object("config.DevelopmentConfig")
 
-app.config['FLASK_ENV']= "development"
-app.config['FLASK_DEBUG']= True
-app.config['FLASK_APP']="src/app.py"
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
-engine = create_engine("sqlite:///database/ehub.db", echo=True)
+engine = create_engine("sqlite:///flaskr/database/ehub.db", echo=True)
 
 
 # Ensure responses aren't cached
@@ -42,13 +39,19 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 
-# Make sure API key is set
-#if not os.environ.get("API_KEY"):
- #   raise RuntimeError("API_KEY not set")
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+
+    # TODO 
+    # When reached this route select from the database 10 most recent posts
+    # Create a list with titles and descriptions
+    # When clicked on links, the link should redirect/render the post page
+    posts = {
+        "Selling AUID X5",
+        "Selling House New York"
+    }
+    return render_template("index.html", listPosts= posts)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -74,7 +77,7 @@ def login():
 
         # Ensure username exists and password is correct
 
-        s = "SELECT name, hash, id FROM users WHERE name =(?)"
+        s = "SELECT username, hash, id FROM users WHERE username =(?)"
         res = db.execute(s, user)
         row= res.fetchone()
         
@@ -135,7 +138,7 @@ def register():
 
 
         # Check if user exists
-        s = select([users.c.name]).where(users.c.name==user)
+        s = select([users.c.username]).where(users.c.username==user)
         res= db.execute(s)
         res = res.fetchone()
         if res and user == res[0]:
@@ -145,7 +148,7 @@ def register():
         #generate pass hash
         passHash = generate_password_hash(password, "sha256")
         # Insert Query into DB
-        ins = users.insert().values(name=user, hash=passHash)
+        ins = users.insert().values(username=user, hash=passHash)
         db.execute(ins)
         # Redirect user to home page
         db.close()
@@ -212,4 +215,5 @@ def changepass():
 
 
     return render_template("changepass.html")
+
 

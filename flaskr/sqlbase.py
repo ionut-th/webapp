@@ -9,7 +9,7 @@ meta = MetaData()
 users = Table(
    'users', meta, 
    Column('id', Integer, primary_key = True), 
-   Column('name', String), 
+   Column('username', String), 
    Column('hash', String), 
 )
 
