@@ -41,6 +41,16 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
+section = [
+    'Dummy'
+    'Job Listing',
+    'Sell General',
+    'Sell Electronics',
+    'Sell AUTO',
+    'Sell Real Estate'
+    'Lost / Found'
+]
+
 
 @app.route("/")
 def index():
@@ -56,6 +66,27 @@ def index():
     return render_template("index.html", listPosts=posts)
 
 
+@app.route("/myposts", methods=["GET", "POST"])
+@login_required
+def myposts():
+    # TODO
+    # When user routes to myposts preset a list of posts from the database with his ID
+    # Also preset a button for each post to allow deletion of the post
+
+    db = engine.connect()
+    userID = session['user_id']
+
+    s = "SELECT * FROM posts WHERE posts.owner_id == (?)"
+    res = db.execute(s, userID)
+
+    if res != None:
+        return render_template("myposts.html",
+                               listPosts=res,
+                               listSections=section
+                               )
+
+    return render_template("myposts.html")
+
 @app.route("/newpost", methods=["GET", "POST"])
 @login_required
 def newpost():
@@ -69,19 +100,18 @@ def newpost():
         catg = request.form.get("category")
         phone = request.form.get("phone")
         city = request.form.get("city")
-        if not _title or len(_title)< 6:
+        if not _title or len(_title) < 6:
             return render_template("newpost.html", error="Please provide all the details")
         if not descr or len(descr) < 6:
             return render_template("newpost.html", error="Please provide all the details")
-        if not catg or catg== "Category":
+        if not catg or catg == "Category":
             return render_template("newpost.html", error="Please provide all the details")
         if not phone or len(phone) < 6:
             return render_template("newpost.html", error="Please provide all the details")
         if not city or len(city) < 2:
             return render_template("newpost.html", error="Please provide all the details")
 
-        print(_title, descr, catg,phone, city, flush=True)
-
+        print(_title, descr, catg, phone, city, flush=True)
 
         db = engine.connect()
         userId = session['user_id']
@@ -195,8 +225,6 @@ def register():
         # Insert Query into DB
         ins = users.insert().values(username=user, hash=passHash)
         db.execute(ins)
-
-
 
         # Redirect user to home page
         db.close()

@@ -7,8 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" type="text/css" href="./static/css/bootstrap.min.css">
     <script src="./static/js/bootstrap.bundle.min.js"></script>
-    <title>EHUB NETWORK</title>
-
+    <title>BAZAAR</title>
 </head>
 
 <body>
@@ -22,7 +21,7 @@
             <div class="collapse navbar-collapse" id="navbarToggler">
                 <a class="navbar-brand">
                     <form method="get" action="/">
-                        <button type="submit" class="btn btn-success">EHUB </button>
+                        <button type="submit" class="btn btn-success">BAZAAR</button>
                     </form>
                 </a>
                 <ul class="navbar-nav mr-auto">
@@ -34,8 +33,12 @@
 
                 <ul class="navbar-nav ml-auto">
                     {% if session.user_id %}
+                    
                     <form method="get" action="/newpost">
                         <button type="submit" class="btn btn-info">New Post</button>
+                    </form>
+                    <form method="get" action="/myposts">
+                        <button type="submit" class="btn btn-info">My Posts</button>
                     </form>
                     <form method="get" action="/changepass">
                         <button type="submit" class="btn btn-info">Change Password</button>
