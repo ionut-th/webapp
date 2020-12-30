@@ -29,9 +29,9 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
-img/*
-static/js/*
-static/css/*
+flaskr/img/*
+flaskr/static/js/*
+flaskr/static/css/*
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
