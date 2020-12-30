@@ -11,8 +11,10 @@ from sqlbase import *
 from helpers import apology, login_required, usd
 
 # Configure application
-template_dir = os.path.abspath('./flaskr/templates') # ./templates  up the path into templates
-app = Flask(__name__, template_folder=template_dir) # also set template folder path
+# ./templates  up the path into templates
+template_dir = os.path.abspath('./flaskr/templates')
+# also set template folder path
+app = Flask(__name__, template_folder=template_dir)
 app.config.from_object("config.DevelopmentConfig")
 
 # Ensure templates are auto-reloaded
@@ -29,6 +31,7 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 
+
 # Custom filter
 app.jinja_env.filters["usd"] = usd
 
@@ -39,11 +42,10 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 
-
 @app.route("/")
 def index():
 
-    # TODO 
+    # TODO
     # When reached this route select from the database 10 most recent posts
     # Create a list with titles and descriptions
     # When clicked on links, the link should redirect/render the post page
@@ -51,7 +53,52 @@ def index():
         "Selling AUID X5",
         "Selling House New York"
     }
-    return render_template("index.html", listPosts= posts)
+    return render_template("index.html", listPosts=posts)
+
+
+@app.route("/newpost", methods=["GET", "POST"])
+@login_required
+def newpost():
+    # TODO
+    # Render a page where you can create a new post
+    # Query the database to add the new post
+    if request.method == "POST":
+        print("NEW POST CREATED")
+        _title = request.form.get("title")
+        descr = request.form.get("description")
+        catg = request.form.get("category")
+        phone = request.form.get("phone")
+        city = request.form.get("city")
+        if not _title or len(_title)< 6:
+            return render_template("newpost.html", error="Please provide all the details")
+        if not descr or len(descr) < 6:
+            return render_template("newpost.html", error="Please provide all the details")
+        if not catg or catg== "Category":
+            return render_template("newpost.html", error="Please provide all the details")
+        if not phone or len(phone) < 6:
+            return render_template("newpost.html", error="Please provide all the details")
+        if not city or len(city) < 2:
+            return render_template("newpost.html", error="Please provide all the details")
+
+        print(_title, descr, catg,phone, city, flush=True)
+
+
+        db = engine.connect()
+        userId = session['user_id']
+        ins = posts.insert().values(
+            owner_id=userId,
+            title=_title,
+            details=descr,
+            city=city,
+            phone=phone,
+            section=catg
+        )
+        print(ins, flush=True)
+        db.execute(ins)
+
+        db.close()
+        return render_template("newpost.html", msg="Post Created Successfully")
+    return render_template("newpost.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -79,17 +126,17 @@ def login():
 
         s = "SELECT username, hash, id FROM users WHERE username =(?)"
         res = db.execute(s, user)
-        row= res.fetchone()
-        
+        row = res.fetchone()
+
         if row != None:
-            uhash= row[1]
+            uhash = row[1]
             _id = row[2]
         else:
             return render_template("login.html", msg="User does not exist")
 
         if not check_password_hash(uhash, pwd):
             return render_template("login.html", msg="User or password error")
-            
+
         # Remember which user has logged in
         session["user_id"] = _id
         db.close()
@@ -114,8 +161,8 @@ def register():
     # Forget any user_id
     session.clear()
     db = engine.connect()
-    
-     # User reached route via POST (as by submitting a form via POST)
+
+    # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
         # Ensure username was submitted
         if not request.form.get("username"):
@@ -131,25 +178,26 @@ def register():
         # check for valid input
         if len(user) < 3:
             return apology("user too short", 403)
-        if len(password) <3:
+        if len(password) < 3:
             return apology("password too short")
         if password != confirmation:
             return apology("password and retyped passwords do not match!")
 
-
         # Check if user exists
-        s = select([users.c.username]).where(users.c.username==user)
-        res= db.execute(s)
+        s = select([users.c.username]).where(users.c.username == user)
+        res = db.execute(s)
         res = res.fetchone()
         if res and user == res[0]:
             return render_template("register.html", msg="Username in use")
 
-
-        #generate pass hash
+        # generate pass hash
         passHash = generate_password_hash(password, "sha256")
         # Insert Query into DB
         ins = users.insert().values(username=user, hash=passHash)
         db.execute(ins)
+
+
+
         # Redirect user to home page
         db.close()
         return redirect("/login")
@@ -201,8 +249,8 @@ def changepass():
         else:
             db.close()
             return redirect("/login")
-        
-        check = check_password_hash( usr, curPass)
+
+        check = check_password_hash(usr, curPass)
 
         if not check:
             db.close()
@@ -213,7 +261,4 @@ def changepass():
             db.close()
             return render_template("changepass.html", msg="Password changed successfully")
 
-
     return render_template("changepass.html")
-
-

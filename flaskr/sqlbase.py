@@ -14,3 +14,14 @@ users = Table(
 )
 
 
+posts = Table(
+   'posts', meta,
+   Column('id', Integer, primary_key= True),
+   Column('owner_id', Integer),
+   Column('title', String),
+   Column('details', String),
+   Column('city', String),
+   Column('phone', String),
+   Column('section', Integer),
+)
+
