@@ -1,4 +1,4 @@
-import os
+import os, time
 
 from flask import Flask, flash, jsonify, redirect, render_template, request, session
 from flask_session import Session
@@ -59,11 +59,10 @@ def index():
     # When reached this route select from the database 10 most recent posts
     # Create a list with titles and descriptions
     # When clicked on links, the link should redirect/render the post page
-    posts = {
-        "Selling AUID X5",
-        "Selling House New York"
-    }
-    return render_template("index.html", listPosts=posts)
+    s = "SELECT * FROM posts ORDER BY posts.postDate ASC LIMIT 20"
+    db = engine.connect()
+    res = db.execute(s)
+    return render_template("index.html", listPosts=res)
 
 
 @app.route("/myposts", methods=["GET", "POST"])
@@ -72,13 +71,22 @@ def myposts():
     # TODO
     # When user routes to myposts preset a list of posts from the database with his ID
     # Also preset a button for each post to allow deletion of the post
-
     db = engine.connect()
     userID = session['user_id']
-
     s = "SELECT * FROM posts WHERE posts.owner_id == (?)"
-    res = db.execute(s, userID)
 
+    if request.method == "POST":
+        post_id = request.form.get("delete_button")
+        upd = "DELETE FROM posts WHERE posts.id == (?) AND posts.owner_id==(?)"
+        db.execute(upd, post_id, userID)
+        res = db.execute(s, userID)
+
+        if res != None:
+            return render_template("myposts.html", msg="Post deleted Successfully!", listPosts=res, listSections=section)
+        else:
+            return redirect("/myposts")
+
+    res = db.execute(s, userID)
     if res != None:
         return render_template("myposts.html",
                                listPosts=res,
@@ -86,6 +94,7 @@ def myposts():
                                )
 
     return render_template("myposts.html")
+
 
 @app.route("/newpost", methods=["GET", "POST"])
 @login_required
@@ -100,6 +109,8 @@ def newpost():
         catg = request.form.get("category")
         phone = request.form.get("phone")
         city = request.form.get("city")
+        date = datetime.now().replace(microsecond=0)
+
         if not _title or len(_title) < 6:
             return render_template("newpost.html", error="Please provide all the details")
         if not descr or len(descr) < 6:
@@ -111,7 +122,7 @@ def newpost():
         if not city or len(city) < 2:
             return render_template("newpost.html", error="Please provide all the details")
 
-        print(_title, descr, catg, phone, city, flush=True)
+        print(_title, descr, catg, phone, city, date, flush=True)
 
         db = engine.connect()
         userId = session['user_id']
@@ -121,7 +132,8 @@ def newpost():
             details=descr,
             city=city,
             phone=phone,
-            section=catg
+            section=catg,
+            postDate=date
         )
         print(ins, flush=True)
         db.execute(ins)

@@ -23,5 +23,6 @@ posts = Table(
    Column('city', String),
    Column('phone', String),
    Column('section', Integer),
+   Column('postDate', String)
 )
 
