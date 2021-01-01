@@ -2,24 +2,32 @@ import os, time
 
 from flask import Flask, flash, jsonify, redirect, render_template, request, session
 from flask_session import Session
+
 from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import *
 from sqlalchemy import *
 from sqlbase import *
-from helpers import apology, login_required, usd
+from helpers import *
+from werkzeug.utils import secure_filename
+
+
 
 # Configure application
+UPLOAD_FOLDER = '/flaskr/upload'
+ALLOWED_EXTENSION = {'jpg', 'png', 'jpeg'}
+
+
 # ./templates  up the path into templates
 template_dir = os.path.abspath('./flaskr/templates')
 # also set template folder path
 app = Flask(__name__, template_folder=template_dir)
 app.config.from_object("config.DevelopmentConfig")
-
+# configure upload folder
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
-
 engine = create_engine("sqlite:///flaskr/database/ehub.db", echo=True)
 
 
@@ -51,6 +59,10 @@ categories = [
     'Lost / Found'
 ]
 
+
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSION
 
 @app.route("/search", methods=['GET', 'POST'])
 def search():
@@ -96,7 +108,7 @@ def index():
     # When reached this route select from the database 10 most recent posts
     # Create a list with titles and descriptions
     # When clicked on links, the link should redirect/render the post page
-    s = "SELECT * FROM posts ORDER BY posts.postDate ASC LIMIT 20"
+    s = "SELECT * FROM posts ORDER BY posts.postDate DESC LIMIT 20"
     db = engine.connect()
     res = db.execute(s)
     return render_template("index.html", listPosts=res)
@@ -110,7 +122,7 @@ def myposts():
     # Also preset a button for each post to allow deletion of the post
     db = engine.connect()
     userID = session['user_id']
-    s = "SELECT * FROM posts WHERE posts.owner_id == (?)"
+    s = "SELECT * FROM posts WHERE posts.owner_id == (?) ORDER BY posts.postDate DESC"
 
     if request.method == "POST":
         post_id = request.form.get("delete_button")
@@ -140,7 +152,7 @@ def newpost():
     # Render a page where you can create a new post
     # Query the database to add the new post
     if request.method == "POST":
-        print("NEW POST CREATED")
+
         _title = request.form.get("title")
         descr = request.form.get("description")
         catg = request.form.get("category")

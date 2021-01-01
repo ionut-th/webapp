@@ -5,7 +5,7 @@ New Post
 {% endblock %}
 
 {% block main %}
-<form action="/newpost" method="post">
+<form action="/newpost" method="post" >
 
     <div class="mb-3">
         <h5 style="color: green;">{{msg}}</h5>
@@ -18,14 +18,12 @@ New Post
 
     <div class="mb-3">
         <label for="exampleFormControlInput2" class="form-label">Phone Number</label>
-        <input type="text" class="form-control" id="exampleFormControlInput2" name="phone"
-            placeholder="000-123-4567">
+        <input type="text" class="form-control" id="exampleFormControlInput2" name="phone" placeholder="000-123-4567">
     </div>
 
     <div class="mb-3">
         <label for="exampleFormControlInput3" class="form-label">City</label>
-        <input type="text" class="form-control" id="exampleFormControlInput3" name="city"
-            placeholder="E.g. New York">
+        <input type="text" class="form-control" id="exampleFormControlInput3" name="city" placeholder="E.g. New York">
     </div>
 
     <div class="row mr-auto col-sm-5 mt-2">
@@ -42,11 +40,14 @@ New Post
 
     <div class="mb-3 mt-2">
         <label for="exampleFormControlTextarea1" class="form-label">Description</label>
-        <textarea class="form-control" id="exampleFormControlTextarea1" name="description" rows="6" placeholder="Post Description, please be as accurate as possible!"></textarea>
+        <textarea class="form-control" id="exampleFormControlTextarea1" name="description" rows="6"
+            placeholder="Post Description, please be as accurate as possible!"></textarea>
     </div>
 
-    <div class="col-auto mx-auto ">
-        <button class="btn btn-primary" type="submit">Create New Post</button>
+ 
+
+    <div class="col-auto ml-0 mt-3 mb-3 ">
+        <button class="btn btn-success" type="submit">Create New Post</button>
     </div>
 
 
