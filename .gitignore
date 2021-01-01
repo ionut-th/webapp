@@ -30,8 +30,7 @@ share/python-wheels/
 *.egg
 MANIFEST
 flaskr/img/*
-flaskr/static/js/*
-flaskr/static/css/*
+
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
