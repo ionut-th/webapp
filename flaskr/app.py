@@ -30,7 +30,8 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 engine = create_engine("sqlite:///flaskr/database/ehub.db", echo=True)
 
-
+app.config["FLASK_ENV"] = "production"
+app.config["FLASK_APP"] = "flaskr/app.py"
 # Ensure responses aren't cached
 @app.after_request
 def after_request(response):

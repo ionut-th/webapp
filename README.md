@@ -1,5 +1,3 @@
-
-
 #  BAZAAR WEB APP Final Project for CS50 HarvardX course
 #### Video Demo:  <URL HERE>
 #### Description:
@@ -22,4 +20,18 @@ Contains mapping of database tables to python sqlalchemy class.
 - layout.html is the base layout of all website pages, it contains the navigation bar functions.
 - index, login, changepass, myposts, newpost, register, search  HTML files inherit from layout.html and each contain a different body code.
 
+#### Requirements
+- Python 3.9.x
+- Python virtualenv
+- Python libs: flask, slqalchemy, flask_session, wekzeug
+#### NOTE
+In oreder to run the flask server and test the website you have to download the zipped project that includes all the setup.
+Steps:
+- Download project.zip
+- Unzip the archive
+- go into webapp folder
+- Activate the virtual environment (I used git bash terminal on windows 10 ) run "source ./venv/scripts/activate"
+- Then export flask variables 1. "export FLASK_ENV=production" (or "development") 2. "export FLASK_APP=flaskr/app.py"
+- Then run the server locally using:  flask run
+- Go to http://127.0.0.1:5000/ to see and test the webapp
 
