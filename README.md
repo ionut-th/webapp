@@ -2,6 +2,7 @@
 #### Video Demo:  <URL HERE>
 #### Description:
 BAZAAR is a website where people post or search various announcements for job, selling used items or lost / found items.
+Users can post or search by category to make it easier.
 
 The website uses Python and Flask for backend with SQLAlchmey, SQLite database, and HTML/CSS with Bootstrap 5 on frontend.
 I chose bootstrap instead of manual HTML/CSS which allowed me faster prototyping and the usage of bootstrap themes. The theme i used can be found on this page https://bootswatch.com/ and its called "Sketchy"
@@ -29,7 +30,8 @@ In oreder to run the flask server and test the website you have to download the 
 Steps:
 - Download project.zip
 - Unzip the archive
-- go into webapp folder
+- Go into webapp folder
+- Open or navigate your terminal to webapp folder
 - Activate the virtual environment (I used git bash terminal on windows 10 ) run "source ./venv/scripts/activate"
 - Then export flask variables 1. "export FLASK_ENV=production" (or "development") 2. "export FLASK_APP=flaskr/app.py"
 - Then run the server locally using:  flask run

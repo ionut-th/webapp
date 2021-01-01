@@ -56,7 +56,7 @@ categories = [
     'Sell General',
     'Sell Electronics',
     'Sell AUTO',
-    'Sell Real Estate'
+    'Sell Houses/ Real Estate'
     'Lost / Found'
 ]
 
