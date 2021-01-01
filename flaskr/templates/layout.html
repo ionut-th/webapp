@@ -13,7 +13,7 @@
 
 <body>
 
-    <nav id="navbar_top" class="navbar navbar-expand-md  sticky-top  navbar-dark bg-dark " >
+    <nav id="navbar_top" class="navbar navbar-expand-md  sticky-top  navbar-dark bg-dark ">
         <div class="container-fluid">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggler"
                 aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
@@ -25,16 +25,28 @@
                         <button type="submit" class="btn btn-success">BAZAAR</button>
                     </form>
                 </a>
-                <ul class="navbar-nav mr-auto">
-                    <form class="form-inline" action="/search" method="POST">
-                        <input class="form-control" style="width: 400px;" type="sumbit" placeholder="Search" aria-label="Search">
-                    </form>
-                </ul>
+                <form action="/search" method="POST">
+                    <ul class="navbar-nav mr-auto">
+                        <div class="row mr-auto">
+                            <select name="search_category" class="custom-select">
+                                <option selected>General</option>
+                                <option value="1">Job Listing</option>
+                                <option value="3">Sell General</option>
+                                <option value="4">Sell Electronics</option>
+                                <option value="5">Sell AUTO</option>
+                                <option value="6">Sell Real Estate</option>
+                                <option value="2">Lost / Found</option>
+                            </select>
+                        </div>
+                        <input class="form-control" style="width: 400px;" type="sumbit" placeholder="Search"
+                            aria-label="Search" name="search">
+                    </ul>
+                </form>
 
 
                 <ul class="navbar-nav ml-auto ">
                     {% if session.user_id %}
-                    
+
                     <form method="get" action="/newpost">
                         <button type="submit" class="btn btn-info mr-1 mt-1">New Post</button>
                     </form>

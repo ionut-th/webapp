@@ -41,8 +41,8 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-section = [
-    'Dummy'
+categories = [
+    'General'
     'Job Listing',
     'Sell General',
     'Sell Electronics',
@@ -51,6 +51,43 @@ section = [
     'Lost / Found'
 ]
 
+
+@app.route("/search", methods=['GET', 'POST'])
+def search():
+    # TODO
+    # Search all posts by selected cateogry and return a list of posts ordered by latest post
+    if request.method == "POST":
+        db= engine.connect()
+        cat = request.form.get("search_category")
+        inputSearch = request.form.get("search")
+
+        s = "SELECT * FROM posts WHERE posts.title LIKE "
+
+        # If we get more than one search word
+        # construct a query from number of words
+        if cat.lower() == "general":
+            section=""
+        else:
+            section= " AND posts.section == " + cat
+
+        fields = inputSearch.split()
+        _query = ""
+        param=""
+        if len(fields) > 1:
+            for f in fields:
+                _temp = "'%"+ f + "%'"
+                _query += " or posts.title LIKE " + _temp
+
+            param = "'%"+fields[0] +"%'" + _query + section 
+            res = db.execute(s+param)
+        else:
+            param = "'%"+ fields[0] + "%'" + section
+            res = db.execute(s+param)
+
+        #print(s+param + section, flush=True)
+
+        return render_template("search.html",  msg="Search Results ", searchResult=res )
+   
 
 @app.route("/")
 def index():
@@ -82,7 +119,7 @@ def myposts():
         res = db.execute(s, userID)
 
         if res != None:
-            return render_template("myposts.html", msg="Post deleted Successfully!", listPosts=res, listSections=section)
+            return render_template("myposts.html", msg="Post deleted Successfully!", listPosts=res, listSections=categories)
         else:
             return redirect("/myposts")
 
@@ -90,7 +127,7 @@ def myposts():
     if res != None:
         return render_template("myposts.html",
                                listPosts=res,
-                               listSections=section
+                               listSections=categories
                                )
 
     return render_template("myposts.html")
